@@ -136,20 +136,3 @@ print("=========================================================================
 print("✨ الجداول المتوفرة في مستودع البيانات الحالي:")
 spark.sql("SHOW TABLES").show()
 
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC -- استعلام احترافي يربط جدول الحقائق بأبعاد الوقت والتضخم وحالة السوق بدون أقواس مربعة
-# MAGIC SELECT 
-# MAGIC     d.Year,
-# MAGIC     ROUND(AVG(f.Gold_Close), 2) AS avg_close_price,
-# MAGIC     ROUND(AVG(f.Daily_Spread), 2) AS avg_daily_volatility,
-# MAGIC     i.Inflation_Risk_Index AS inflation_status,
-# MAGIC     COUNT(CASE WHEN m.Price_Trend = 'Bullish (Up)' THEN 1 END) AS bullish_days,
-# MAGIC     COUNT(CASE WHEN m.Price_Trend = 'Bearish (Down)' THEN 1 END) AS bearish_days
-# MAGIC FROM default.fact_gold_prices f
-# MAGIC JOIN default.dim_gold_date d ON f.Date_Key = d.Date
-# MAGIC JOIN default.dim_gold_inflation i ON f.Inflation_Key = i.Inflation_Key
-# MAGIC JOIN default.dim_gold_market_status m ON f.Market_Status_Key = m.Market_Status_Key
-# MAGIC GROUP BY d.Year, i.Inflation_Risk_Index
-# MAGIC ORDER BY d.Year ASC;
